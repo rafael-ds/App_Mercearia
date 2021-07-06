@@ -1,5 +1,7 @@
-from users import Class_Users
+# ADM -> administradores
+# OPR -> Operadores de caixa
 
+from users import Class_Users
 from time import sleep
 
 users_adm = []
@@ -43,51 +45,67 @@ def menu():
 
             opc = int(input('Informe a Opção Desejada: '))
 
-            # Refatorar para um sistema de repetição a ter o cancelamento
-            if opc == 1:
-                cadastrar = str(input('Cadastrar novo colaborador? S/N: '))
+            if opc == 1:  # Cadastrar
 
-                if cadastrar == 's':
-                    nome_user = str(input('Informe o nome do colaborador(a): '))
-                    senha_user = str(input('Cadestre uma senha do colaborador(a): '))
-                    cargo_user = str(input('Informe o cargo do colaborador(a):\n '))
+                while True:
+                    cadastrar = str(input('Cadastrar novo colaborador? S/N: '))
 
-                    colaborador = Class_Users.Usuario(nome_user.title(), senha_user, cargo_user)
+                    if cadastrar == 's':
+                        nome_user = str(input('Informe o nome do colaborador(a): '))
+                        senha_user = str(input('Cadestre uma senha do colaborador(a): '))
+                        cargo_user = str(input('Informe o cargo do colaborador(a):\n '))
 
-                    if colaborador.cargo() == 'adm':
-                        users_adm.append(colaborador)
+                        #  Instância do Objeto Usuario
+                        colaborador = Class_Users.Usuario(nome_user.title(), senha_user, cargo_user)
 
-                    elif colaborador.cargo() == 'opr':
-                        users_opr.append(colaborador)
+                        # Condicional para armazenar os dados dos adms
+                        if colaborador.cargo() == 'adm':
+                            dados_adm = {'ID': colaborador.id(), 'NOME': colaborador.nome(),
+                                         'CARGO': colaborador.cargo(), 'SENHA': colaborador.senha()}
 
-                elif cadastrar == 'n':
-                    menu()
-            # ---------------------------------------------------------------
-            elif opc == 2:
+                            #  Salva o objeto usuario  .csv do adm
+                            Class_Users.salvar_adm(dados_adm)
+                            sleep(1)
+                            print('Novo ADM cadastrado com sucesso! ')
+                            sleep(1)
+
+                        # Condicional para armazenar os dados dos opr
+                        elif colaborador.cargo() == 'opr':
+                            dados_opr = {'ID': colaborador.id(), 'NOME': colaborador.nome(),
+                                         'CARGO': colaborador.cargo(), 'SENHA': colaborador.senha()}
+
+                            #  Salva o objeto usuario  .csv do opr
+                            Class_Users.salvar_opr(dados_opr)
+                            sleep(1)
+                            print('Novo OPR cadastrado com sucesso! ')
+                            sleep(1)
+
+                    elif cadastrar == 'n':
+                        menu()
+
+            elif opc == 2:  # Alterar
                 pass
-            elif opc == 3:
+            elif opc == 3:  # Excluir
                 pass
-            elif opc == 4:
+            elif opc == 4:  # Lista de Colaboradores
 
                 opc = int(input('1 - ADM / 2 - OPR: '))
 
                 if opc == 1:
                     print('')
-                    for lista in users_adm:
-                        print(f'ID: {lista.id()} - '
-                              f'Colaborardor: {lista.nome()} - '
-                              f'Cargo {lista.cargo()}')
-                    # menu()
+                    Class_Users.abrir_adm()
+
+                    sleep(2)
+                    menu()
 
                 elif opc == 2:
                     print('')
-                    for lista in users_opr:
-                        print(f'ID: {lista.id()} - '
-                              f'Colaborardor: {lista.nome()} - '
-                              f'Cargo {lista.cargo()}')
-                    # menu()
+                    Class_Users.abrir_opr()
 
-            elif opc == 5:
+                    sleep(2)
+                    menu()
+
+            elif opc == 5:  # Sair
                 sleep(1)
                 menu()
 
