@@ -58,18 +58,27 @@ def salvar_opr(usuario):
 
 
 def abrir_adm():
+    lista = []
     with open('s_adm.csv', 'r', newline='', encoding='utf-8') as abrir:
-        ler = csv.DictReader(abrir)
+        ler = csv.reader(abrir)
 
-        print('ID - Colaborador')
         for i in ler:
-            print(i.get('ID'), i.get('NOME'))
+            lista.append(i)
+
+        return lista
+
+        # print('ID - Colaborador')
+        # for i in lista:
+        #     # return i.get('ID'), i.get('NOME')
+        #     i.__dict__
 
 
 def abrir_opr():
+    lista = []
     with open('s_opr.csv', 'r', newline='', encoding='utf-8') as abrir:
-        ler = csv.DictReader(abrir)
+        ler = csv.reader(abrir)
 
-        print('ID - Colaborador')
         for i in ler:
-            print(i.get('ID'), i.get('NOME'))
+            lista.append(i)
+
+        return lista
