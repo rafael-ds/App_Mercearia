@@ -41,6 +41,32 @@ def salvar_adm(usuario):
         escrever.writerow(usuario)
 
 
+def abrir_adm():
+    lista = []
+
+    with open('s_adm.csv', 'r', newline='', encoding='utf-8') as abrir:
+        ler = csv.DictReader(abrir)
+
+        for i in ler:
+            lista.append(i)
+
+        return lista
+
+
+def atulizar_adm(atl):
+    with open('s_adm.csv', 'w', newline='', encoding='utf-8') as atlz:
+        cabecalho = ['ID', 'NOME', 'CARGO', 'SENHA']
+        escrever = csv.DictWriter(atlz, fieldnames=cabecalho)
+
+        if atlz.tell() == 0:
+            escrever.writeheader()
+
+        for i in atl:
+            escrever.writerow(
+                {'ID': i['ID'], 'NOME': i['NOME'], 'CARGO': i['CARGO'], 'SENHA': i['SENHA']}
+            )
+
+
 def salvar_opr(usuario):
     """
      Função que cria um arquivo .csv com os dados do usuario opr.
@@ -57,26 +83,11 @@ def salvar_opr(usuario):
         escrever.writerow(usuario)
 
 
-def abrir_adm():
-    lista = []
-    with open('s_adm.csv', 'r', newline='', encoding='utf-8') as abrir:
-        ler = csv.reader(abrir)
-
-        for i in ler:
-            lista.append(i)
-
-        return lista
-
-        # print('ID - Colaborador')
-        # for i in lista:
-        #     # return i.get('ID'), i.get('NOME')
-        #     i.__dict__
-
-
 def abrir_opr():
     lista = []
+
     with open('s_opr.csv', 'r', newline='', encoding='utf-8') as abrir:
-        ler = csv.reader(abrir)
+        ler = csv.DictReader(abrir)
 
         for i in ler:
             lista.append(i)

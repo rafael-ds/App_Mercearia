@@ -106,7 +106,36 @@ def menu():
                                     menu()
 
                         elif opc == 2:  # Alterar
-                            pass
+                            # Lista usada para cast dos dados .csv
+                            cast = []
+
+                            opc = int(input('1 - Alterar ADM / 2 - Alterar OPR: '))
+
+                            if opc == 1:
+                                # armazenando os itens na variavel dados
+                                dados = Class_Users.abrir_adm()
+
+                                # Loop para armazenar os dados no cast
+                                for i in dados:
+                                    cast.append(i)
+
+                                colab = str(input('Informe o nome do colaborador: ')).title()
+
+                                # print(f'Sou o cast Primeiro {cast}')
+                                # print('')
+
+                                for i in cast:
+                                    if i['NOME'] == colab:
+                                        cast.remove(i)
+                                # print('')
+                                #
+                                # print(f'Sou o cast Segundo {cast}')
+
+                                # Chamada que atualiza os itens do cast para o arquivo .csv
+                                Class_Users.atulizar_adm(cast)
+                                # del cast[:]
+                                menu()
+
                         elif opc == 3:  # Excluir
                             pass
 
@@ -116,18 +145,20 @@ def menu():
 
                             if opc == 1:
                                 print('')
-                                lista = Class_Users.abrir_adm()
 
-                                for i in lista:
+                                dados = Class_Users.abrir_adm()
+                                for i in dados:
                                     print(i)
-                                # print(Class_Users.abrir_adm())
 
                                 sleep(2)
                                 menu()
 
                             elif opc == 2:
                                 print('')
-                                Class_Users.abrir_opr()
+
+                                dados = Class_Users.abrir_opr()
+                                for i in dados:
+                                    print(i)
 
                                 sleep(2)
                                 menu()
