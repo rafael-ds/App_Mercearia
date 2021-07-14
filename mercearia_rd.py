@@ -119,22 +119,73 @@ def menu():
                                 for i in dados:
                                     cast.append(i)
 
-                                colab = str(input('Informe o nome do colaborador: ')).title()
+                                colab = input('Informe o ID do colaborador(a): ')
 
-                                # print(f'Sou o cast Primeiro {cast}')
-                                # print('')
-
+                                # Logica de modificação de um item atraves do ID
                                 for i in cast:
-                                    if i['NOME'] == colab:
+                                    if i['ID'] == colab:
                                         cast.remove(i)
-                                # print('')
-                                #
-                                # print(f'Sou o cast Segundo {cast}')
 
-                                # Chamada que atualiza os itens do cast para o arquivo .csv
-                                Class_Users.atulizar_adm(cast)
-                                # del cast[:]
-                                menu()
+                                        # Chamada que atualiza os itens do cast para o arquivo .csv
+                                        # Sem o item removido
+                                        Class_Users.atulizar_adm(cast)
+
+                                        # Criando novos dados:
+                                        nome_colab = str(input('Informe o nome do colaborador(a): ')).title()
+                                        senha_colab = str(input('Informe a senha do colaborador(a): ')).title()
+
+                                        # Objeto
+                                        colaborador = Class_Users.Usuario(nome_colab.title(), senha_colab, cargo='adm')
+
+                                        # Trasformando o OBJ em dicionario
+                                        dados_adm = {'ID': colaborador.id(), 'NOME': colaborador.nome(),
+                                                     'CARGO': colaborador.cargo(), 'SENHA': colaborador.senha()}
+
+                                        # Escrevendo o dicionario no .csv
+                                        Class_Users.salvar_adm(dados_adm)
+
+                                        del cast[:]
+                                        sleep(1)
+                                        menu()
+
+                                    # Caso o item com ID não seja encontrado
+                                    else:
+                                        print('Coloborador não encontrado.')
+                                        menu()
+
+                            elif opc == 2:
+                                dados = Class_Users.abrir_opr()
+
+                                for i in dados:
+                                    cast.append(i)
+
+                                colab = input('Informe o ID do(a) colaborador(a): ')
+
+                                for lista in cast:
+                                    if lista['ID'] == colab:
+                                        cast.remove(i)
+
+                                        # Chamada que atualiza os itens do cast para o arquivo .csv
+                                        # Sem o item removido
+                                        Class_Users.atulizar_opr(cast)
+
+                                        # Criando novos dados:
+                                        nome_colab = str(input('Informe o nome do colaborador(a): ')).title()
+                                        senha_colab = str(input('Informe a senha do colaborador(a): ')).title()
+
+                                        # Objeto
+                                        colaborador = Class_Users.Usuario(nome_colab.title(), senha_colab, cargo='adm')
+
+                                        # Trasformando o OBJ em dicionario
+                                        dados_opr = {'ID': colaborador.id(), 'NOME': colaborador.nome(),
+                                                     'CARGO': colaborador.cargo(), 'SENHA': colaborador.senha()}
+
+                                        # Escrevendo o dicionario no .csv
+                                        Class_Users.salvar_opr(dados_opr)
+
+                                        del cast[:]
+                                        sleep(1)
+                                        menu()
 
                         elif opc == 3:  # Excluir
                             pass

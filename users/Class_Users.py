@@ -93,3 +93,17 @@ def abrir_opr():
             lista.append(i)
 
         return lista
+
+
+def atulizar_opr(atl):
+    with open('s_opr.csv', 'w', newline='', encoding='utf-8') as atlz:
+        cabecalho = ['ID', 'NOME', 'CARGO', 'SENHA']
+        escrever = csv.DictWriter(atlz, fieldnames=cabecalho)
+
+        if atlz.tell() == 0:
+            escrever.writeheader()
+
+        for i in atl:
+            escrever.writerow(
+                {'ID': i['ID'], 'NOME': i['NOME'], 'CARGO': i['CARGO'], 'SENHA': i['SENHA']}
+            )
