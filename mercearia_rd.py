@@ -1,13 +1,10 @@
 # ADM -> administradores
 # OPR -> Operadores de caixa
 import csv
-
-from users import Class_Users
 from time import sleep
 
-# users_adm = []
-# users_opr = []
-# lista_users = []
+from users import Class_Users
+from produtos import class_produtos as item
 
 sleep(1)
 
@@ -67,7 +64,8 @@ def menu():
 
                         opc = int(input('Informe a Opção Desejada: '))
 
-                        if opc == 1:  # Cadastrar
+                        # Cadastrar -- OK
+                        if opc == 1:
 
                             while True:
                                 cadastrar = str(input('Cadastrar novo colaborador? S/N: '))
@@ -105,7 +103,8 @@ def menu():
                                 elif cadastrar == 'n':
                                     menu()
 
-                        elif opc == 2:  # Alterar
+                        # Alterar -- OK
+                        elif opc == 2:
                             # Lista usada para cast dos dados .csv
                             cast = []
 
@@ -174,7 +173,7 @@ def menu():
                                         senha_colab = str(input('Informe a senha do colaborador(a): ')).title()
 
                                         # Objeto
-                                        colaborador = Class_Users.Usuario(nome_colab.title(), senha_colab, cargo='adm')
+                                        colaborador = Class_Users.Usuario(nome_colab.title(), senha_colab, cargo='opr')
 
                                         # Trasformando o OBJ em dicionario
                                         dados_opr = {'ID': colaborador.id(), 'NOME': colaborador.nome(),
@@ -187,8 +186,78 @@ def menu():
                                         sleep(1)
                                         menu()
 
-                        elif opc == 3:  # Excluir
-                            pass
+                        # Excluir
+                        elif opc == 3:
+                            cast = []
+
+                            opc = int(input('1 - Excluir ADM / 2 - Excluir OPR: '))
+
+                            if opc == 1:
+                                # Armazena os itens .csv na variavel dados
+                                dados = Class_Users.abrir_adm()
+
+                                #  For para armazena na lista cast
+                                for i in dados:
+                                    cast.append(i)
+
+                                colab = input('Informe o ID do(a) ADM: ')
+
+                                for adm in cast:
+                                    if adm['ID'] == colab:
+
+                                        del_user = str(input(f"Deseja excluir {adm['NOME']}?\nS/N: "))
+
+                                        if del_user == 's' or del_user == 'S':
+                                            sleep(1)
+                                            cast.remove(adm)
+                                            sleep(1)
+                                            # Atualiza o arquivo .csv com os itens restante do cast
+                                            Class_Users.atulizar_adm(cast)
+
+                                            sleep(1)
+                                            print('Usuario removido com sucesso! ')
+                                            sleep(1)
+
+                                            # Limpa a lista cast para não haver problema de repetição de itens
+                                            del cast[:]
+                                            menu()
+
+                                        elif del_user == 'n' or del_user == 'N':
+                                            sleep(1)
+                                            del cast[:]
+                                            menu()
+                                            sleep(1)
+
+                            elif opc == 2:
+                                dados = Class_Users.abrir_opr()
+
+                                for i in dados:
+                                    cast.append(i)
+
+                                colab = input('Informe o ID do(a) OPR: ')
+
+                                for opr in cast:
+                                    if opr['ID'] == colab:
+
+                                        del_opr = str(input(f'Deseja remover {opr["NOME"]}?\nS/N: '))
+
+                                        if del_opr == 's' or del_opr == 'S':
+                                            sleep(1)
+                                            cast.remove(opr)
+                                            sleep(1)
+                                            Class_Users.atulizar_opr(cast)
+                                            sleep(1)
+                                            print('Usuario removido com sucesso! ')
+
+                                            sleep(1)
+                                            del cast[:]
+                                            menu()
+
+                                        elif del_opr == 'n' or del_opr == 'N':
+                                            sleep(1)
+                                            del cast[:]
+                                            menu()
+                                            sleep(1)
 
                         elif opc == 4:  # Lista de Colaboradores
 
@@ -219,7 +288,36 @@ def menu():
                             menu()
 
                     elif opc == 2:
-                        pass
+                        print('=' * 15 + ' Configurações de Produtos ' + '=' * 15 + '\n')
+
+                        print('-' * 60)
+                        print(' 1 - Cadastrar / 2 - Alterar / 3 - Excluir / 4 - sair ')
+                        print('-' * 60)
+
+                        opc = int(input('Informe a Opção Desejada: '))
+
+                        if opc == 1:
+                            print('=' * 10 + ' Cadastro de produtos ' + '=' * 10 + '\n')
+
+                            codigo_prod = int(input('Informe o codigo do produto: '))
+                            nome_produto = str(input('Informe o nome do produto: ')).title()
+                            descricao_prod = str(input('Informe a descricao do produto: '))
+                            valor_prod = float(input('Informe o valor do produto: '))
+
+                            produto = item.Produtos(codigo_prod, nome_produto, descricao_prod, valor_prod)
+
+                            prd = {'COD': produto.codigo(), 'PRODUTO': produto.nome(),
+                                   'DESCRIÇÃO': produto.descricao(), 'VALOR(R$)': produto.valor()}
+
+                            item.cadastrar_prod(prd)
+
+                        elif opc == 2:
+                            pass
+                        elif opc == 3:
+                            pass
+                        elif opc == 4:
+                            menu()
+
                     elif opc == 3:
                         pass
                     elif opc == 4:
