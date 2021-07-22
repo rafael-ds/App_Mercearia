@@ -296,23 +296,90 @@ def menu():
 
                         opc = int(input('Informe a Opção Desejada: '))
 
+                        #  Cadastrar
                         if opc == 1:
                             print('=' * 10 + ' Cadastro de produtos ' + '=' * 10 + '\n')
 
-                            codigo_prod = int(input('Informe o codigo do produto: '))
-                            nome_produto = str(input('Informe o nome do produto: ')).title()
-                            descricao_prod = str(input('Informe a descricao do produto: '))
-                            valor_prod = float(input('Informe o valor do produto: '))
+                            while True:
+                                cad = str(input('Cadastrar novo produto? '))
 
-                            produto = item.Produtos(codigo_prod, nome_produto, descricao_prod, valor_prod)
+                                if cad == 's' or cad == 'S':
 
-                            prd = {'COD': produto.codigo(), 'PRODUTO': produto.nome(),
-                                   'DESCRIÇÃO': produto.descricao(), 'VALOR(R$)': produto.valor()}
+                                    try:
+                                        codigo_prod = int(input('Informe o codigo do produto: '))
+                                    except ValueError:
+                                        print('É necessario inserir o codigo do produto: ')
+                                        codigo_prod = int(input('Informe o codigo do produto: '))
 
-                            item.cadastrar_prod(prd)
+                                    nome_produto = str(input('Informe o nome do produto: ')).title()
+                                    descricao_prod = str(input('Informe a descricao do produto: '))
 
+                                    try:
+                                        valor_prod = float(input('Informe o valor do produto: '))
+                                    except ValueError:
+                                        print('É necessario inserir o valor do produto: ')
+                                        valor_prod = float(input('Informe o valor do produto: '))
+
+                                    produto = item.Produtos(codigo_prod, nome_produto, descricao_prod, valor_prod)
+
+                                    prd = {'COD': produto.codigo(), 'PRODUTO': produto.nome(),
+                                           'DESCRIÇÃO': produto.descricao(), 'VALOR(R$)': produto.valor()}
+
+                                    sleep(.5)
+                                    item.cadastrar_prod(prd)
+
+                                elif cad == 'n' or cad == 'N':
+                                    sleep(1)
+                                    menu()
+
+                        # Alterar
                         elif opc == 2:
-                            pass
+                            cast = []
+
+                            print('=' * 10 + ' Alterar produtos ' + '=' * 10 + '\n')
+
+                            #  Armazenamento da função lista_prod()
+                            prod = item.lista_prod()
+
+                            #  for para add. os intens da lista no cast
+                            for i in prod:
+                                cast.append(i)
+
+                            #  Estetica, só para mostrar os itens
+                            for itens in cast:
+                                print(itens)
+
+                            sleep(1)
+
+                            cod = input('Informe o codigo do produto a ser alterado: ')
+
+                            for produto in cast:
+                                if produto['COD'] == cod:
+                                    # Mostra somente o produto do codigo
+                                    print(produto)
+
+                                    while True:
+                                        opc = str(input('Alterar Produtos? S/N'))
+
+                                        if opc == 's' or opc == 'S':
+                                            alterar = int(input('Alterar -- 1 - COD / 2 - Produtos / 3 - Descrição / 4 - '
+                                                                'Valor(R$) '))
+
+                                            # Alterar o codigo do produto
+                                            if alterar == 1:
+                                                novo_cod = int(input('Informe o codigo para o produto: '))
+                                                produto.update({'COD': novo_cod})
+
+                                                sleep(.5)
+                                                print('Codigo alterando com sucesso')
+                                                # -----------continue --------------------
+                                        elif opc == 'n' or opc == 'N':
+                                            sleep(1)
+                                            menu()
+
+                            print(prod)
+                            sleep(.5)
+                            menu()
                         elif opc == 3:
                             pass
                         elif opc == 4:

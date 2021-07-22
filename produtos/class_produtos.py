@@ -22,7 +22,7 @@ class Produtos:
 
 
 def cadastrar_prod(produto):
-    with open('cad_prod.csv', 'a', encoding='utf-8', newline='') as salvar:
+    with open('produtos.csv', 'a', encoding='utf-8', newline='') as salvar:
         cabecalho = ['COD', 'PRODUTO', 'DESCRIÇÃO', 'VALOR(R$)']
         escrever = csv.DictWriter(salvar, fieldnames=cabecalho)
 
@@ -31,3 +31,14 @@ def cadastrar_prod(produto):
 
         escrever.writerow(produto)
 
+
+def lista_prod():
+    lista = []
+
+    with open('produtos.csv', 'r', encoding='utf-8', newline='') as abrir:
+        ler = csv.DictReader(abrir)
+
+        for i in ler:
+            lista.append(i)
+
+    return lista
