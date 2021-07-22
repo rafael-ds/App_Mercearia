@@ -42,3 +42,18 @@ def lista_prod():
             lista.append(i)
 
     return lista
+
+
+def atualizar_lista(atz):
+    with open('produtos.csv', 'w', newline='', encoding='utf-8') as atlz:
+        cabecalho = ['COD', 'PRODUTO', 'DESCRIÇÃO', 'VALOR(R$)']
+        escrever = csv.DictWriter(atlz, fieldnames=cabecalho)
+
+        if atlz.tell() == 0:
+            escrever.writeheader()
+
+        for i in atz:
+            escrever.writerow(
+                {'COD': i['COD'], 'PRODUTO': i['PRODUTO'],
+                 'DESCRIÇÃO': i['DESCRIÇÃO'], 'VALOR(R$)': i['VALOR(R$)']}
+            )

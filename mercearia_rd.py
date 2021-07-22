@@ -301,7 +301,7 @@ def menu():
                             print('=' * 10 + ' Cadastro de produtos ' + '=' * 10 + '\n')
 
                             while True:
-                                cad = str(input('Cadastrar novo produto? '))
+                                cad = str(input('Cadastrar novo produto?\nS/N: '))
 
                                 if cad == 's' or cad == 'S':
 
@@ -328,6 +328,8 @@ def menu():
                                     sleep(.5)
                                     item.cadastrar_prod(prd)
 
+                                    print('-' * 50 + '\n')
+
                                 elif cad == 'n' or cad == 'N':
                                     sleep(1)
                                     menu()
@@ -346,36 +348,109 @@ def menu():
                                 cast.append(i)
 
                             #  Estetica, só para mostrar os itens
+                            print('-' * 30 + ' LISTA DE PRODUTOS ' + '-' * 30)
                             for itens in cast:
                                 print(itens)
-
+                            print('-' * 90)
                             sleep(1)
 
-                            cod = input('Informe o codigo do produto a ser alterado: ')
+                            while True:
+                                opc = str(input('Fazer alteração do produto?\nS/N: '))
 
-                            for produto in cast:
-                                if produto['COD'] == cod:
-                                    # Mostra somente o produto do codigo
-                                    print(produto)
+                                if opc == 's' or opc == 'S':
+                                    cod = input('Informe o codigo do produto a ser alterado: ')
+                                    print('')
+                                    for produto in cast:
+                                        if produto['COD'] == cod:
+                                            sleep(.3)
+                                            print(produto)
+                                            print('')
 
-                                    while True:
-                                        opc = str(input('Alterar Produtos? S/N'))
+                                            alterar = int(input(
+                                                'Alterar -- 1 - COD / 2 - Produtos / 3 - Descrição / 4 - Valor(R$) '))
 
-                                        if opc == 's' or opc == 'S':
-                                            alterar = int(input('Alterar -- 1 - COD / 2 - Produtos / 3 - Descrição / 4 - '
-                                                                'Valor(R$) '))
-
-                                            # Alterar o codigo do produto
                                             if alterar == 1:
                                                 novo_cod = int(input('Informe o codigo para o produto: '))
                                                 produto.update({'COD': novo_cod})
 
                                                 sleep(.5)
-                                                print('Codigo alterando com sucesso')
-                                                # -----------continue --------------------
-                                        elif opc == 'n' or opc == 'N':
-                                            sleep(1)
-                                            menu()
+                                                print('Codigo do produto alterando com sucesso.\n')
+
+                                            # Alterar o nome do produto
+                                            elif alterar == 2:
+                                                novo_prod = str(input('Informe o nome do produto: ')).title()
+                                                produto.update({'PRODUTO': novo_prod})
+
+                                                sleep(.5)
+                                                print('Nome do produto alterando com sucesso.\n')
+
+                                            elif alterar == 3:
+                                                novo_desc = str(input('Informe a descrição do produto: '))
+                                                produto.update({'DESCRIÇÃO': novo_desc})
+
+                                                sleep(.5)
+                                                print('Descrição do produto alterando com sucesso.\n')
+
+                                            elif alterar == 4:
+                                                novo_preco = float(input('Informe o valor do produto: '))
+                                                produto.update({'VALOR(R$)': novo_preco})
+
+                                                sleep(.5)
+                                                print('Preço do produto alterando com sucesso.\n')
+
+                                        # --- Comparação ocorrendo erro de buscas --- #
+                                        # elif produto['COD'] != cod:
+                                        #     print('Código não encontrado.')
+                                elif opc == 'n' or opc == 'N':
+                                    item.atualizar_lista(cast)
+                                    sleep(.5)
+                                    del cast[:]
+                                    sleep(1)
+                                    menu()
+                            # for produto in cast:
+                            #     if produto['COD'] == cod:
+                            #         # Mostra somente o produto do codigo
+                            #         print(produto)
+                            #
+                            #         while True:
+                            #             opc = str(input('Alterar Produtos? S/N'))
+                            #
+                            #             if opc == 's' or opc == 'S':
+                            #                 alterar = int(input('Alterar -- 1 - COD / 2 - Produtos / 3 - Descrição / 4 - '
+                            #                                     'Preço(R$) '))
+                            #
+                            #                 # Alterar o codigo do produto
+                            #                 if alterar == 1:
+                            #                     novo_cod = int(input('Informe o codigo para o produto: '))
+                            #                     produto.update({'COD': novo_cod})
+                            #
+                            #                     print(cast)
+                            #
+                            #                     sleep(.5)
+                            #                     print('Codigo alterando com sucesso')
+                            #
+                            #                 # Alterar o nome do produto
+                            #                 elif alterar == 2:
+                            #                     novo_prod = str(input('Informe o nome do produto: ')).title()
+                            #                     produto.update({'PRODUTO': novo_prod})
+                            #
+                            #                     print(cast)
+                            #
+                            #                 elif alterar == 3:
+                            #                     novo_desc = str(input('Informe a descrição do produto: '))
+                            #                     produto.update({'PRODUTO': novo_desc})
+                            #
+                            #                     print(cast)
+                            #
+                            #                 elif alterar == 4:
+                            #                     novo_preco = float(input('Informe o nome do produto: '))
+                            #                     produto.update({'PRODUTO': novo_preco})
+                            #
+                            #                     print(cast)
+                            #
+                            #             elif opc == 'n' or opc == 'N':
+                            #                 sleep(1)
+                            #                 menu()
 
                             print(prod)
                             sleep(.5)

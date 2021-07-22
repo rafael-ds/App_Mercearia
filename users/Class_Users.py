@@ -61,6 +61,7 @@ def atulizar_adm(atl):
         if atlz.tell() == 0:
             escrever.writeheader()
 
+        # for necessario para pecorrer a lista(cast)
         for i in atl:
             escrever.writerow(
                 {'ID': i['ID'], 'NOME': i['NOME'], 'CARGO': i['CARGO'], 'SENHA': i['SENHA']}
