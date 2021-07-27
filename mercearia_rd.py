@@ -13,7 +13,7 @@ def menu():
     print('')
     print('=' * 25 + ' Mercadinho ' + '=' * 25)
     print('1 - Iniciar Caixa\n '
-          '2 - Passar Produtos\n '
+          '2 - Conferir Produtos\n '
           '3 - Configurações\n '
           '4 - Cadastrar Clientes\n '
           '5 - Fechar Caixa\n ')
@@ -22,7 +22,61 @@ def menu():
 
     # Iniciar Caixa
     if opc == 1:
-        menu()
+        try:
+            print('=' * 15 + ' Caixa ' + '=' * 15 + '\n')
+            print('')
+            senha_acesso = input('Informe a sua senha de acesso: ')
+
+            acesso = Class_Users.abrir_opr()
+            user_opr = list(filter(lambda u: u['SENHA'] == senha_acesso, acesso))
+
+            if user_opr:
+                for opr in user_opr:
+                    sleep(1)
+                    print(f"Caixa aberto - OPR: {opr.get('NOME')}")
+
+                lista_itens = []
+                cod = ''
+
+                # Menu para passar os produtos
+                while cod != 's':
+                    cod = input('Codigo do produto: ')
+
+                    bd_prod = item.lista_prod()
+                    itens = list(filter(lambda i: i['COD'] == cod, bd_prod))
+
+                    if itens:
+
+                        for i in itens:
+                            lista_itens.append(i.get('VALOR(R$)'))
+
+                            print(f"Cod: {i.get('COD')}")
+                            print(f"Produto: {i.get('PRODUTO')}")
+                            print(f"Descrição: {i.get('DESCRIÇÃO')}")
+                            print(f"Preço: {i.get('VALOR(R$)')}")
+                            print('-' * 60)
+                            print('')
+
+                        total = [float(i) for i in lista_itens]
+                        print('-' * 30)
+                        print(f'Total - {sum(total)}')
+                        print('-' * 30)
+
+                    else:
+                        print('Produto não cadastrado:\n')
+
+                menu()
+
+            else:
+                sleep(.5)
+                print('Usuario não encontrado! ')
+                sleep(.5)
+                menu()
+
+        except FileNotFoundError:
+            pass
+
+
 
     # Passar Produtos
     elif opc == 2:
