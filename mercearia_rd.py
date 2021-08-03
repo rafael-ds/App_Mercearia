@@ -30,42 +30,118 @@ def menu():
             acesso = Class_Users.abrir_opr()
             user_opr = list(filter(lambda u: u['SENHA'] == senha_acesso, acesso))
 
-            if user_opr:
-                for opr in user_opr:
-                    sleep(1)
-                    print(f"Caixa aberto - OPR: {opr.get('NOME')}")
+            def menu_caixa():
+                """
+                Função Interna que tem como objetivo a opreração do caixa
+                Passagem de produtos
+                Balanço do caixa
+                Fechamento do caixa
+                Retorno ao menu principal
 
+                """
                 lista_itens = []
                 cod = ''
 
-                # Menu para passar os produtos
-                while cod != 's':
-                    cod = input('Codigo do produto: ')
+                for opr in user_opr:
+                    sleep(1)
+                    print(f"Caixa aberto - OPR: {opr.get('NOME')}\n")
 
-                    bd_prod = item.lista_prod()
-                    itens = list(filter(lambda i: i['COD'] == cod, bd_prod))
+                print('1 - Passar produto\n'
+                      '2 - Balaço do caixa\n'
+                      '3 - Fechar caixa\n'
+                      '4 - Menu pricipal\n ')
 
-                    if itens:
+                opc = int(input('Informe a opção desejada: '))
 
-                        for i in itens:
-                            lista_itens.append(i.get('VALOR(R$)'))
+                # Passar produtos
+                if opc == 1:
+                    # chamada global para iterar na condicional club
+                    global total
 
-                            print(f"Cod: {i.get('COD')}")
-                            print(f"Produto: {i.get('PRODUTO')}")
-                            print(f"Descrição: {i.get('DESCRIÇÃO')}")
-                            print(f"Preço: {i.get('VALOR(R$)')}")
-                            print('-' * 60)
-                            print('')
+                    # Menu para passar os produtos
+                    while cod != 's':
+                        cod = input('Codigo do produto: ')
+                        print('')
 
-                        total = [float(i) for i in lista_itens]
-                        print('-' * 30)
-                        print(f'Total - {sum(total)}')
-                        print('-' * 30)
+                        bd_prod = item.lista_prod()
+                        itens = list(filter(lambda i: i['COD'] == cod, bd_prod))
 
-                    else:
-                        print('Produto não cadastrado:\n')
+                        if itens:
 
-                menu()
+                            # loop para manipulação dos itens add na lista itens
+                            # loop de estetica
+                            for i in itens:
+                                lista_itens.append(i.get('VALOR(R$)'))
+
+                                print(f"Cod: {i.get('COD')}")
+                                print(f"Produto: {i.get('PRODUTO')}")
+                                print(f"Descrição: {i.get('DESCRIÇÃO')}")
+                                print(f"Preço: R${i.get('VALOR(R$)')}")
+                                print('-' * 60)
+                                print('')
+
+                            # list comprehension para iterar sobre
+                            # os itens da lista_itens
+                            # OBS: variavel com chamada global
+                            total = [float(i) for i in lista_itens]
+
+                            print('-' * 30)
+                            print(f'Total - R${sum(total):.2f}')
+                            print('-' * 30)
+
+                    club = input('Club? S/N: ')
+
+                    if club == 's' or club == 'S':
+                        # ----------------------------------
+                        # pedir cpf para verificar cadastro
+                        # ----------------------------------
+
+                        desconto = 10  # 10%
+                        total_desc = sum(total) * desconto / 100
+                        total_pg = sum(total) - total_desc
+
+                        print('-' * 50)
+                        print(f'Valor desconto: R${total_desc:.2f}')
+                        print(f'Valor Total: R${total_pg:.2f}')
+                        print('-' * 50)
+
+                        valor_recebido = float(input('Valor recebido: '))
+                        troco = valor_recebido - total_pg
+                        print(f'Troco = R${troco:.2f}\n')
+                        print('-' * 50)
+
+                        sleep(1)
+                        menu_caixa()
+
+                    elif club == 'n' or 'N':
+
+                        print('-' * 50)
+                        print(f'Valor apagar: R${sum(total)}')
+                        valor_recebido = float(input('Valor recebido: '))
+                        troco = valor_recebido - sum(total)
+
+                        print(f'Troco = R${troco:.2f}\n')
+
+                        sleep(1)
+                        menu_caixa()
+
+                # Balanço do caixa
+                elif opc == 2:
+                    pass
+
+                # Fechar caixa
+                elif opc == 3:
+                    pass
+
+                # Menu principal
+                elif opc == 4:
+                    sleep(1)
+                    menu()
+
+            # Condicional que verifica a existencia do operador de caixa
+            if user_opr:
+                sleep(1)
+                menu_caixa()
 
             else:
                 sleep(.5)
@@ -75,8 +151,6 @@ def menu():
 
         except FileNotFoundError:
             pass
-
-
 
     # Passar Produtos
     elif opc == 2:
