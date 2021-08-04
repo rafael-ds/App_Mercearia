@@ -5,6 +5,7 @@ from time import sleep
 
 from users import Class_Users
 from produtos import class_produtos as item
+from clientes import class_clientes as bd_clientes
 
 sleep(1)
 
@@ -12,11 +13,10 @@ sleep(1)
 def menu():
     print('')
     print('=' * 25 + ' Mercadinho ' + '=' * 25)
-    print('1 - Iniciar Caixa\n '
-          '2 - Conferir Produtos\n '
-          '3 - Configurações\n '
-          '4 - Cadastrar Clientes\n '
-          '5 - Fechar Caixa\n ')
+    print('1 - Iniciar Caixa\n'
+          '2 - Conferir Produtos\n'
+          '3 - Configurações\n'
+          '4 - Sair\n')
 
     opc = int(input('Informe a opção desejada: '))
 
@@ -48,8 +48,9 @@ def menu():
 
                 print('1 - Passar produto\n'
                       '2 - Balaço do caixa\n'
-                      '3 - Fechar caixa\n'
-                      '4 - Menu pricipal\n ')
+                      '3 - Cadastro clientes\n'
+                      '4 - Fechar caixa\n'
+                      '5 - Menu pricipal\n ')
 
                 opc = int(input('Informe a opção desejada: '))
 
@@ -91,27 +92,43 @@ def menu():
 
                     club = input('Club? S/N: ')
 
+                    # Condicional que verifica se o cliente tem seu cpf cadastrado para
+                    # para descontos
                     if club == 's' or club == 'S':
-                        # ----------------------------------
-                        # pedir cpf para verificar cadastro
-                        # ----------------------------------
 
-                        desconto = 10  # 10%
-                        total_desc = sum(total) * desconto / 100
-                        total_pg = sum(total) - total_desc
+                        enter_cpf = input('Informe o CPF: ')
 
-                        print('-' * 50)
-                        print(f'Valor desconto: R${total_desc:.2f}')
-                        print(f'Valor Total: R${total_pg:.2f}')
-                        print('-' * 50)
+                        lista_cliente = bd_clientes.lista_clientes()
+                        buscar_cliente = list(filter(lambda b: b['CPF'] == enter_cpf, lista_cliente))
 
-                        valor_recebido = float(input('Valor recebido: '))
-                        troco = valor_recebido - total_pg
-                        print(f'Troco = R${troco:.2f}\n')
-                        print('-' * 50)
+                        if buscar_cliente:
+                            for nome in buscar_cliente:
+                                print(f'Seja bem vindo(a) {nome.get("NOME")}\n')
 
-                        sleep(1)
-                        menu_caixa()
+                            desconto = 10  # 10%
+                            total_desc = sum(total) * desconto / 100
+                            total_pg = sum(total) - total_desc
+
+                            print('-' * 50)
+                            print(f'Valor desconto: R${total_desc:.2f}')
+                            print(f'Valor Total: R${total_pg:.2f}')
+                            print('-' * 50)
+
+                            valor_recebido = float(input('Valor recebido: '))
+                            troco = valor_recebido - total_pg
+                            print(f'Troco = R${troco:.2f}\n')
+                            print('-' * 50)
+
+                            sleep(1)
+                            menu_caixa()
+
+                        else:
+                            # ------------
+                            # Criar Logica para permanencia dos valores
+                            # Caso o o cpf não esteja cadastrado
+                            # ----------------
+                            print('Usuario nao cadastrado!\n')
+                            menu_caixa()
 
                     elif club == 'n' or 'N':
 
@@ -129,12 +146,31 @@ def menu():
                 elif opc == 2:
                     pass
 
-                # Fechar caixa
                 elif opc == 3:
+                    # Cadastrar Clientes
+                    print('-' * 50 + ' Cadastrar cliente ' + '-' * 50)
+
+                    nome = str(input('Nome do cliente: ')).title()
+                    tel = int(input('Telefone: '))
+                    email = str(input('E-mail: '))
+                    cpf = int(input('CPF: '))
+
+                    cliente = bd_clientes.Clientes(nome, tel, email, cpf)
+                    dados_cliente = {'NOME': cliente.nome(), 'TEL.': cliente.telefone(),
+                                     'EMAIL': cliente.email(), 'CPF': cliente.cpf()}
+
+                    bd_clientes.cad_cliente(dados_cliente)
+                    print('Cliente cadastrado com sucesso.\n')
+                    sleep(1)
+
+                    menu_caixa()
+
+                # Fechar caixa
+                elif opc == 4:
                     pass
 
                 # Menu principal
-                elif opc == 4:
+                elif opc == 5:
                     sleep(1)
                     menu()
 
@@ -152,7 +188,7 @@ def menu():
         except FileNotFoundError:
             pass
 
-    # Passar Produtos
+    # Conferir Produtos
     elif opc == 2:
         menu()
 
@@ -651,13 +687,9 @@ def menu():
             elif cadastrar == 'n':
                 menu()
 
-    # Cadastrar Clientes
+    # Sair
     elif opc == 4:
-        menu()
-
-    # Fechar Caixa
-    elif opc == 5:
-        pass
+        exit(0)
 
     print('-' * 60)
 
