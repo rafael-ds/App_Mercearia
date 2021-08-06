@@ -6,8 +6,11 @@ from time import sleep
 from users import Class_Users
 from produtos import class_produtos as item
 from clientes import class_clientes as bd_clientes
+from data_hora import data_hora as dh
 
 sleep(1)
+
+balanco_caixa = []
 
 
 def menu():
@@ -42,15 +45,17 @@ def menu():
                 lista_itens = []
                 cod = ''
 
-                for opr in user_opr:
-                    sleep(1)
-                    print(f"Caixa aberto - OPR: {opr.get('NOME')}\n")
+                # for opr in user_opr:
+                #     sleep(1)
+                #     print(f"Caixa aberto - OPR: {opr.get('NOME')}\n")
+
+                nome = [i.get('NOME') for i in user_opr]
+                print(f'OPR: {nome[0]} - Data: {dh.datas()} - Hora: {dh.horas()}')
 
                 print('1 - Passar produto\n'
-                      '2 - Balaço do caixa\n'
-                      '3 - Cadastro clientes\n'
-                      '4 - Fechar caixa\n'
-                      '5 - Menu pricipal\n ')
+                      '2 - Cadastro clientes\n'
+                      '3 - Controle de caixa\n'
+                      '4 - Menu pricipal\n ')
 
                 opc = int(input('Informe a opção desejada: '))
 
@@ -109,6 +114,9 @@ def menu():
                             total_desc = sum(total) * desconto / 100
                             total_pg = sum(total) - total_desc
 
+                            # Add a lista para o balanço do caixa
+                            balanco_caixa.append(total_pg)
+
                             print('-' * 50)
                             print(f'Valor desconto: R${total_desc:.2f}')
                             print(f'Valor Total: R${total_pg:.2f}')
@@ -134,6 +142,10 @@ def menu():
 
                         print('-' * 50)
                         print(f'Valor apagar: R${sum(total)}')
+
+                        # Add a lista para o balanço do caixa
+                        balanco_caixa.append(total)
+
                         valor_recebido = float(input('Valor recebido: '))
                         troco = valor_recebido - sum(total)
 
@@ -142,11 +154,8 @@ def menu():
                         sleep(1)
                         menu_caixa()
 
-                # Balanço do caixa
+                # Cadastrar clientes
                 elif opc == 2:
-                    pass
-
-                elif opc == 3:
                     # Cadastrar Clientes
                     print('-' * 50 + ' Cadastrar cliente ' + '-' * 50)
 
@@ -166,11 +175,56 @@ def menu():
                     menu_caixa()
 
                 # Fechar caixa
-                elif opc == 4:
-                    pass
+                elif opc == 3:
+                    total_caixa = [float(sum(i)) for i in balanco_caixa]
+
+                    print('-' * 50 + ' Controle do caixa ' + '-' * 50)
+                    opc = int(input('1 - Mostrar parciais / 2 - Mostrar total / 3 - Fechar caixa\n'))
+                    print('-' * 50 + ' Controle do caixa ' + '-' * 50)
+
+                    if opc == 1:
+
+                        print('' * 60)
+                        print(f"OPR: {nome[0]} / DATA: {dh.datas()} /  HORA: {dh.horas()}")
+                        print(f"Parcial do caixa")
+
+                        for parcial in balanco_caixa:
+                            print(f'R${parcial}')
+                        print('' * 60)
+
+                        sleep(1)
+                        menu_caixa()
+
+                    elif opc == 2:
+
+                        print('' * 60)
+                        print(f"OPR: {nome[0]} / DATA: {dh.datas()} /  HORA: {dh.horas()}")
+                        print(f"Total do caixa\nR${sum(total_caixa)}")
+                        print('' * 60)
+
+                        sleep(1)
+                        menu_caixa()
+
+                    elif opc == 3:
+                        print('' * 60)
+                        fechar = str(input('Fechar Caixa?\nS/N: '))
+                        if fechar == 's' or 'S':
+                            sleep(1)
+                            print('-' * 60)
+                            print(f"OPR: {nome[0]} / DATA: {dh.datas()} /  HORA: {dh.horas()}")
+                            item.controle_caixa(nome, balanco_caixa, sum(total_caixa))
+                            print('-' * 60)
+                            print(f"R${sum(total_caixa):.2f}")
+                            print('Caixa fechado! ')
+
+                            menu()
+
+                        elif fechar == 'n' or 'N':
+                            sleep(1)
+                            menu_caixa()
 
                 # Menu principal
-                elif opc == 5:
+                elif opc == 4:
                     sleep(1)
                     menu()
 

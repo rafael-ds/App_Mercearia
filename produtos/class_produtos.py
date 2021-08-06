@@ -1,4 +1,5 @@
 import csv
+from data_hora import data_hora as dh
 
 
 class Produtos:
@@ -57,3 +58,15 @@ def atualizar_lista(atz):
                 {'COD': i['COD'], 'PRODUTO': i['PRODUTO'],
                  'DESCRIÇÃO': i['DESCRIÇÃO'], 'VALOR(R$)': i['VALOR(R$)']}
             )
+
+
+def controle_caixa(nome, cp, ct):
+    with open('bd_controle_caixa.csv', 'a', newline='', encoding='utf-8') as teste:
+        cabecalho = ['OPR', 'DATA', 'HORA', 'CAIXA_PARCIAL', 'CAIXA_TOTAL']
+        escrever = csv.DictWriter(teste, fieldnames=cabecalho)
+
+        if teste.tell() == 0:
+            escrever.writeheader()
+
+        escrever.writerow({'OPR': nome[0], 'DATA': dh.datas(), 'HORA': dh.horas(),
+                           'CAIXA_PARCIAL': cp[0], 'CAIXA_TOTAL': ct})
