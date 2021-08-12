@@ -61,12 +61,39 @@ def atualizar_lista(atz):
 
 
 def controle_caixa(nome, cp, ct):
-    with open('bd_controle_caixa.csv', 'a', newline='', encoding='utf-8') as teste:
-        cabecalho = ['OPR', 'DATA', 'HORA', 'CAIXA_PARCIAL', 'CAIXA_TOTAL']
-        escrever = csv.DictWriter(teste, fieldnames=cabecalho)
+    """
+    Função que tem como objetivo criar um controle que permita armezanar os dados
+    do caixa.
+    :param nome: Nome do operador que estara utilizando o caixa
+    :param cp: Contrlo dos valores em R$ parciais do caixa
+    :param ct: Controle do valor total do caixa depois do fechamento
 
-        if teste.tell() == 0:
+    """
+    with open('bd_controle_caixa.csv', 'a', newline='', encoding='utf-8') as salvar:
+        cabecalho = ['OPR', 'DATA', 'HORA', 'CAIXA_PARCIAL', 'CAIXA_TOTAL']
+        escrever = csv.DictWriter(salvar, fieldnames=cabecalho)
+
+        if salvar.tell() == 0:
             escrever.writeheader()
 
         escrever.writerow({'OPR': nome[0], 'DATA': dh.datas(), 'HORA': dh.horas(),
-                           'CAIXA_PARCIAL': cp[0], 'CAIXA_TOTAL': ct})
+                           'CAIXA_PARCIAL': cp, 'CAIXA_TOTAL': ct})
+
+
+def abrir_controle_caixa():
+    """
+    Função que tem como objetivo abrir o arquivo csv em modo leitura
+    :return: Retorna uma lista com os dados no modo dict do arquivo csv
+    bd_controle_caixa.csv
+
+    """
+    with open('bd_controle_caixa.csv', 'r', newline='', encoding='utf-8') as abrir:
+        lista = []
+        ler = csv.DictReader(abrir)
+
+        for i in ler:
+            lista.append(i)
+
+        return lista
+
+

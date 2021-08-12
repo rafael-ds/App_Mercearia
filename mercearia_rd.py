@@ -11,6 +11,8 @@ from data_hora import data_hora as dh
 sleep(1)
 
 balanco_caixa = []
+p_club = []
+
 
 
 def menu():
@@ -62,7 +64,7 @@ def menu():
                 # Passar produtos
                 if opc == 1:
                     # chamada global para iterar na condicional club
-                    global total
+                    global total, porcentagem
 
                     # Menu para passar os produtos
                     while cod != 's':
@@ -104,13 +106,17 @@ def menu():
                         enter_cpf = input('Informe o CPF: ')
 
                         lista_cliente = bd_clientes.lista_clientes()
-                        buscar_cliente = list(filter(lambda b: b['CPF'] == enter_cpf, lista_cliente))
+                        cpf_cliente = list(filter(lambda b: b['CPF'] == enter_cpf, lista_cliente))
 
-                        if buscar_cliente:
-                            for nome in buscar_cliente:
+                        if cpf_cliente:
+                            for nome in cpf_cliente:
                                 print(f'Seja bem vindo(a) {nome.get("NOME")}\n')
 
-                            desconto = 10  # 10%
+                            def porcentagem():
+                                for i in p_club:
+                                    return i
+
+                            desconto = porcentagem()  # 10%
                             total_desc = sum(total) * desconto / 100
                             total_pg = sum(total) - total_desc
 
@@ -141,10 +147,11 @@ def menu():
                     elif club == 'n' or 'N':
 
                         print('-' * 50)
-                        print(f'Valor apagar: R${sum(total)}')
+                        print(f'Valor a pagar: R${sum(total):.2f}')
 
                         # Add a lista para o balanço do caixa
-                        balanco_caixa.append(total)
+                        soma = sum(total)
+                        balanco_caixa.append(soma)
 
                         valor_recebido = float(input('Valor recebido: '))
                         troco = valor_recebido - sum(total)
@@ -157,7 +164,7 @@ def menu():
                 # Cadastrar clientes
                 elif opc == 2:
                     # Cadastrar Clientes
-                    print('-' * 50 + ' Cadastrar cliente ' + '-' * 50)
+                    print('-' * 20 + ' Cadastrar cliente ' + '-' * 20)
 
                     nome = str(input('Nome do cliente: ')).title()
                     tel = int(input('Telefone: '))
@@ -174,14 +181,15 @@ def menu():
 
                     menu_caixa()
 
-                # Fechar caixa
+                # Controle de caixa
                 elif opc == 3:
-                    total_caixa = [float(sum(i)) for i in balanco_caixa]
+                    total_caixa = [i for i in balanco_caixa]
 
                     print('-' * 50 + ' Controle do caixa ' + '-' * 50)
                     opc = int(input('1 - Mostrar parciais / 2 - Mostrar total / 3 - Fechar caixa\n'))
                     print('-' * 50 + ' Controle do caixa ' + '-' * 50)
 
+                    # Mostrar Paciais
                     if opc == 1:
 
                         print('' * 60)
@@ -189,33 +197,42 @@ def menu():
                         print(f"Parcial do caixa")
 
                         for parcial in balanco_caixa:
-                            print(f'R${parcial}')
+                            print(f'R${parcial:.2f}')
                         print('' * 60)
 
                         sleep(1)
                         menu_caixa()
 
+                    # Mostrar Total
                     elif opc == 2:
 
                         print('' * 60)
                         print(f"OPR: {nome[0]} / DATA: {dh.datas()} /  HORA: {dh.horas()}")
-                        print(f"Total do caixa\nR${sum(total_caixa)}")
+                        print(f"Total do caixa\nR${sum(total_caixa):.2f}")
                         print('' * 60)
 
                         sleep(1)
                         menu_caixa()
 
+                    # Fechar Caixa
                     elif opc == 3:
+
                         print('' * 60)
                         fechar = str(input('Fechar Caixa?\nS/N: '))
                         if fechar == 's' or 'S':
+
                             sleep(1)
                             print('-' * 60)
                             print(f"OPR: {nome[0]} / DATA: {dh.datas()} /  HORA: {dh.horas()}")
                             item.controle_caixa(nome, balanco_caixa, sum(total_caixa))
                             print('-' * 60)
                             print(f"R${sum(total_caixa):.2f}")
-                            print('Caixa fechado! ')
+
+                            sleep(1)
+                            # zera a lista balanco_caixa para não haver duplicatas.
+                            del balanco_caixa[:]
+                            sleep(1)
+                            print('Caixa fechado!\n')
 
                             menu()
 
@@ -244,6 +261,19 @@ def menu():
 
     # Conferir Produtos
     elif opc == 2:
+
+        cod = input('Informe o codigo do produto: ')
+        lista_produtos = item.lista_prod()
+        produto = list(filter(lambda p: p['COD'] == cod, lista_produtos))
+
+        sleep(.5)
+        for i in produto:
+            print('-' * 20)
+            print(f"Cod: {i.get('COD')}")
+            print(f"Produto: {i.get('PRODUTO')}")
+            print(f"Descrição: {i.get('DESCRIÇÃO')}")
+            print(f"R${i.get('VALOR(R$)')}")
+        sleep(1)
         menu()
 
     # Configurações
@@ -274,7 +304,7 @@ def menu():
 
                     print(' 1 - Config. do Colaboradores:\n '
                           '2 - Config. de  Produtos:\n '
-                          '3 - Config. de  Vendas:\n '
+                          '3 - Config. Avançadas:\n '
                           '4 - Sair:\n ')
 
                     opc = int(input('Informe a Opção Desejada: '))
@@ -702,9 +732,78 @@ def menu():
                         elif opc == 5:
                             menu()
 
-                    # Config. de  Vendas
+                    # Config. Avançadas:
                     elif opc == 3:
-                        pass
+                        opc = int(input('1 - Controle de caixa / 2 - Controle club\n'))
+
+                        # Controle do caixa
+                        if opc == 1:
+                            lista_valores = []
+
+                            opc = int(input('1 - Mostrar por OPR / 2 - Mostrar por DATA\n'))
+                            lista_oprs = item.abrir_controle_caixa()
+
+                            if opc == 1:
+
+                                opr = str(input('Operardo: ')).title()
+                                dados_opr = list(filter(lambda n: n['OPR'] == opr, lista_oprs))
+
+                                if dados_opr:
+                                    print(f"Operador(a): {i.get('OPR')}\n")
+                                    print(' DATA  /  HORA  /  C.PARCIAL')
+                                    print('-' * 50)
+
+                                    for i in dados_opr:
+                                        dados = float(i.get('CAIXA_TOTAL'))
+                                        lista_valores.append(dados)
+
+                                        print(f"{i.get('DATA')}  -  {i.get('CAIXA_PARCIAL')}")
+
+                                    print(f'Total do Caixa: {sum(lista_valores):.2f}')
+
+                                    sleep(1)
+                                    del lista_valores[:]
+                                    sleep(1)
+                                    menu()
+
+                                sleep(1)
+                                menu()
+                            elif opc == 2:
+                                datas = str(input('Data: 00/00/0000: '))
+                                dados_data = list(filter(lambda n: n['DATA'] == datas, lista_oprs))
+
+                                if dados_data:
+                                    print(' DATA  /  OPR  /  C.TOTAL')
+                                    print('-' * 50)
+                                    print(f'Data: {datas}')
+                                    for i in dados_data:
+                                        dados = float(i.get('CAIXA_TOTAL'))
+                                        lista_valores.append(dados)
+
+                                        print(f"{i.get('OPR')}  -   {i.get('CAIXA_TOTAL')}")
+
+                                    print(f'Valor total: {sum(lista_valores):.2f}')
+
+                                    sleep(1)
+                                    del lista_valores[:]
+                                    sleep(1)
+                                    menu()
+
+                                else:
+                                    print(datas)
+                                    print('Dado não encontrado.\n')
+                                    menu()
+
+                        # Controle do Club
+                        elif opc == 2:
+                            #  Criando a porcentage
+                            print('-' * 50 + ' Contole do Club ' + '-' * 50)
+
+                            porc = input('Informe a porcentagem para o club: ')
+                            club = bd_clientes.club(porc)
+
+                            print(club)
+                            menu()
 
                     elif opc == 4:
                         sleep(1)
