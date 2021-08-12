@@ -45,11 +45,5 @@ def lista_clientes():
 
 
 def club(p):
-    with open('bd_club.csv', 'w', newline='', encoding='utf-8') as salvar:
-        cabecalho = ['DESCONTO_CLUB']
-        escrever = csv.DictWriter(salvar, fieldnames=cabecalho)
-
-        if salvar.tell() == 0:
-            escrever.writeheader()
-
-        escrever.writerow(p)
+    with open('bd_club.txt', 'w') as salvar:
+        salvar.write(p)

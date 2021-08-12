@@ -64,7 +64,7 @@ def menu():
                 # Passar produtos
                 if opc == 1:
                     # chamada global para iterar na condicional club
-                    global total, porcentagem
+                    global total
 
                     # Menu para passar os produtos
                     while cod != 's':
@@ -112,11 +112,12 @@ def menu():
                             for nome in cpf_cliente:
                                 print(f'Seja bem vindo(a) {nome.get("NOME")}\n')
 
-                            def porcentagem():
-                                for i in p_club:
-                                    return i
+                            # Tratamento do desconto do club
+                            arquivo_club = open('bd_club.txt', 'r')
+                            dado = arquivo_club.read()
+                            porct = float(dado)
 
-                            desconto = porcentagem()  # 10%
+                            desconto = porct
                             total_desc = sum(total) * desconto / 100
                             total_pg = sum(total) - total_desc
 
@@ -799,11 +800,14 @@ def menu():
                             #  Criando a porcentage
                             print('-' * 50 + ' Contole do Club ' + '-' * 50)
 
-                            porc = input('Informe a porcentagem para o club: ')
-                            club = bd_clientes.club(porc)
+                            porcentage = input('Informe a porcentagem para o club: ')
 
-                            print(club)
-                            menu()
+                            bd_clientes.club(porcentage)
+                            print('Porfavor é necessario renicializar o programa.')
+                            sleep(1)
+                            print('Saindo do programa')
+                            sleep(1)
+                            exit(1)
 
                     elif opc == 4:
                         sleep(1)
